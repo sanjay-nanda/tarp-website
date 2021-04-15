@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import Map from './components/Map.js';
+import {useState, useEffect} from 'react';
+import Header from './components/Header'
+import Column from './components/Column'
 
 function App() {
+
+  const [eventData, setEventData] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const res = await fetch('https://eonet.sci.gsfc.nasa.gov/api/v2.1/events')
+      const { events } = await res.json()
+      setEventData(events)
+    }
+    fetchEvents()
+    console.log(eventData);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Map eventData={eventData}/>
+      <Column eventData={eventData}/>
     </div>
   );
 }
